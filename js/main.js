@@ -12,10 +12,13 @@ var bulletTime = 0;
 var alien;
 var alienInfo;
 var newAlien; 
+var points = 100;
 var score = 0;
 var scoreText;
 var lives = 3;
 var livesText;
+var startButton;
+var playing = false;
 
 function preload() {
     //scale object
@@ -32,6 +35,9 @@ function preload() {
 
     //load image of the alien
     game.load.image('alien', 'img/alien2.png');
+
+    //load image of the start button
+    game.load.spritesheet('button', 'img/button.png', 120, 40);
 
 }
 
@@ -72,9 +78,10 @@ function create() {
     //lives text
     livesText = game.add.text(game.world.width - 5, 5, 'Lives: ' + lives, { font: '18px Verdana', fill: 'white' });
     livesText.anchor.set(1, 0);
-    lifeLostText = game.add.text(game.world.width * 0.5, game.world.height * 0.5, 'Life lost, click to continue', { font: '18px Verdana', fill: 'white' });
-    lifeLostText.anchor.set(0.5);
-    lifeLostText.visible = false;
+
+    //adding start button
+    startButton = game.add.button(game.world.width * 0.5, game.world.height * 0.5, 'button', startGame, this, 1, 0, 2);
+    startButton.anchor.set(0.5);
 }
 
 function update() {
@@ -83,17 +90,19 @@ function update() {
         'left': Phaser.Keyboard.LEFT,
         'right': Phaser.Keyboard.RIGHT
     });
-    if (cursors.left.isDown) {
-        ship.body.velocity.x = -150;
-    }
-    else if (cursors.right.isDown) {
-        ship.body.velocity.x = 150;
-    }
-    else if (cursors.shot.isDown) {
-        shootBullet();
-    }
-    else {
-        ship.body.velocity.x = 0;
+    if (playing == true) {
+        if (cursors.left.isDown) {
+            ship.body.velocity.x = -150;
+        }
+        else if (cursors.right.isDown) {
+            ship.body.velocity.x = 150;
+        }
+        else if (cursors.shot.isDown) {
+            shootBullet();
+        }
+        else {
+            ship.body.velocity.x = 0;
+        }
     }
 
     game.physics.arcade.collide(bullet, alien, bulletHitAlien);
@@ -148,6 +157,11 @@ function initAliens() {
 function bulletHitAlien(bullet, alien) {
     alien.kill();
     bullet.kill();
-    score += 10;
+    score += points;
     scoreText.setText('Points: ' + score);
+}
+
+function startGame() {
+    startButton.destroy();
+    playing = true;
 }
