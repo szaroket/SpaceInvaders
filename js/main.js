@@ -11,7 +11,11 @@ var bulletInfo = false;
 var bulletTime = 0;
 var alien;
 var alienInfo;
-var newAlien;
+var newAlien; 
+var score = 0;
+var scoreText;
+var lives = 3;
+var livesText;
 
 function preload() {
     //scale object
@@ -61,6 +65,9 @@ function create() {
     alien.enableBody = true;
     alien.physicsBodyType = Phaser.Physics.ARCADE;
     initAliens();
+
+    //score text
+    scoreText = game.add.text(5, 5, 'Points: 0', { font: '18px Verdana', fill: 'white' });
 }
 
 function update() {
@@ -134,4 +141,6 @@ function initAliens() {
 function bulletHitAlien(bullet, alien) {
     alien.kill();
     bullet.kill();
+    score += 10;
+    scoreText.setText('Points: ' + score);
 }
