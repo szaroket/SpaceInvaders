@@ -57,6 +57,9 @@ function create() {
     ship.body.collideWorldBounds = true;
 
     //create the alien
+    alien = game.add.group();
+    alien.enableBody = true;
+    alien.physicsBodyType = Phaser.Physics.ARCADE;
     initAliens();
 
 }
@@ -79,6 +82,8 @@ function update() {
     else {
         ship.body.velocity.x = 0;
     }
+
+    
 }
 
 function shootBullet() {
@@ -106,23 +111,23 @@ function initAliens() {
         },
         offset: {
             top: 50,
-            left: 50
+            left: 20
         },
-        padding: 15
+        padding: 10
     };
-
-    alien = game.add.group();
 
     for (c = 0; c < aliensInfo.count.col; c++) {
         for (r = 0; r < aliensInfo.count.row; r++) {
             var alienX = (r * (aliensInfo.width + aliensInfo.padding)) + aliensInfo.offset.left;
             var alienY = (c * (aliensInfo.height + aliensInfo.padding)) + aliensInfo.offset.top;
 
-            newAlien = game.add.sprite(alienX, alienY, 'alien');
-            game.physics.enable(newAlien, Phaser.Physics.ARCADE);
-            newAlien.body.immovable = true;
-            newAlien.anchor.set(0.5);
-            alien.add(newAlien);
+            newAlien = alien.create(alienX, alienY, 'alien');
+            newAlien.anchor.setTo(0.5, 0.5);
+            newAlien.body.moves = false;
         }
     }
+
+    var tween = game.add.tween(alien).to({
+        x: 100
+    }, 1000, Phaser.Easing.Linear.None, true, 0, 1000, true);
 }
