@@ -7,6 +7,7 @@ var game = new Phaser.Game(500, 400, Phaser.AUTO, null, {
 });
 
 var ship;
+var bulletInfo = false;
 
 function preload() {
     //scale object
@@ -18,6 +19,9 @@ function preload() {
     //load image of the ship
     game.load.image('ship', 'img/ship2.png');
 
+    //load image of bullet
+    game.load.image('bullet', 'img/bullet.png');
+
 }
 
 function create() {
@@ -27,6 +31,7 @@ function create() {
     ship = game.add.sprite(game.world.width * 0.5, game.world.height - 40, 'ship');
     ship.anchor.set(0.5);
     game.physics.enable(ship, Phaser.Physics.ARCADE);
+    ship.body.collideWorldBounds = true;
 }
 
 function update() {
@@ -42,9 +47,20 @@ function update() {
         ship.body.velocity.x = 150;
     }
     else if (cursors.shot.isDown) {
-        
+        bulletInfo = true;
+        shootBullet();
     }
     else {
         ship.body.velocity.x = 0;
     }
+}
+
+function shootBullet() {
+    if (bulletInfo) {
+        //create the bullet
+        bullet = game.add.sprite(ship.world.x, ship.world.y - 30, 'bullet');
+        game.physics.enable(bullet, Phaser.Physics.ARCADE);
+        bullet.body.velocity.y = -150;
+    }
+    bulletInfo = false;
 }
