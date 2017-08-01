@@ -68,6 +68,13 @@ function create() {
 
     //score text
     scoreText = game.add.text(5, 5, 'Points: 0', { font: '18px Verdana', fill: 'white' });
+
+    //lives text
+    livesText = game.add.text(game.world.width - 5, 5, 'Lives: ' + lives, { font: '18px Verdana', fill: 'white' });
+    livesText.anchor.set(1, 0);
+    lifeLostText = game.add.text(game.world.width * 0.5, game.world.height * 0.5, 'Life lost, click to continue', { font: '18px Verdana', fill: 'white' });
+    lifeLostText.anchor.set(0.5);
+    lifeLostText.visible = false;
 }
 
 function update() {
