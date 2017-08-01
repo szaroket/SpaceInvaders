@@ -61,7 +61,6 @@ function create() {
     alien.enableBody = true;
     alien.physicsBodyType = Phaser.Physics.ARCADE;
     initAliens();
-
 }
 
 function update() {
@@ -83,7 +82,7 @@ function update() {
         ship.body.velocity.x = 0;
     }
 
-    
+    game.physics.arcade.collide(bullet, alien, bulletHitAlien);
 }
 
 function shootBullet() {
@@ -122,12 +121,17 @@ function initAliens() {
             var alienY = (c * (aliensInfo.height + aliensInfo.padding)) + aliensInfo.offset.top;
 
             newAlien = alien.create(alienX, alienY, 'alien');
+            newAlien.body.immovable = true;
             newAlien.anchor.setTo(0.5, 0.5);
-            newAlien.body.moves = false;
         }
     }
 
     var tween = game.add.tween(alien).to({
         x: 100
     }, 1000, Phaser.Easing.Linear.None, true, 0, 1000, true);
+}
+
+function bulletHitAlien(bullet, alien) {
+    alien.kill();
+    bullet.kill();
 }
