@@ -89,8 +89,10 @@ function create() {
 
     //create the ship
     ship = game.add.sprite(game.world.width * 0.5, game.world.height - 40, 'ship');
+    ship.enableBody = true;
     ship.anchor.set(0.5);
     game.physics.enable(ship, Phaser.Physics.ARCADE);
+    ship.body.immovable = true;
     ship.body.collideWorldBounds = true;
 
     //create the alien
@@ -136,6 +138,7 @@ function update() {
     }
 
     game.physics.arcade.collide(bullet, alien, bulletHitAlien);
+    game.physics.arcade.collide(alienBullet, ship, bulletHitShip);
 }
 
 function shootBullet() {
@@ -179,6 +182,18 @@ function bulletHitAlien(bullet, alien) {
 
     if (score == 2800) {
         alert("YOU WON!");
+        location.reload();
+    }
+}
+
+function bulletHitShip(ship, alienBullet) {
+    alienBullet.kill();
+    lives -= 1;
+    if (lives != 0) {
+        livesText.setText('Lives: ' + lives);
+    }
+    else {
+        alert('YOU LOST, GAME OVER!');
         location.reload();
     }
 }
