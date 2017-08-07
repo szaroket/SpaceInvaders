@@ -10,7 +10,19 @@ var ship;
 var bulletInfo = false;
 var bulletTime = 0;
 var alien;
-var alienInfo;
+var aliensInfo = {
+        width: 50,
+        height: 20,
+        count: {
+            row: 7,
+            col: 4
+        },
+        offset: {
+            top: 50,
+            left: 20
+        },
+        padding: 10
+    };
 var newAlien; 
 var points = 100;
 var score = 0;
@@ -124,19 +136,6 @@ function shootBullet() {
 }
 
 function initAliens() {
-    aliensInfo = {
-        width: 50,
-        height: 20,
-        count: {
-            row: 7,
-            col: 4
-        },
-        offset: {
-            top: 50,
-            left: 20
-        },
-        padding: 10
-    };
 
     for (c = 0; c < aliensInfo.count.col; c++) {
         for (r = 0; r < aliensInfo.count.row; r++) {
@@ -159,6 +158,11 @@ function bulletHitAlien(bullet, alien) {
     bullet.kill();
     score += points;
     scoreText.setText('Points: ' + score);
+
+    if (score == 2800) {
+        alert("YOU WON!");
+        location.reload();
+    }
 }
 
 function startGame() {
