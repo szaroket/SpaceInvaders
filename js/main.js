@@ -31,6 +31,9 @@ var lives = 3;
 var livesText;
 var startButton;
 var playing = false;
+var alienBullet;
+var livingAlines = [];
+var bulletAlienTime = 0;
 
 function preload() {
     //scale object
@@ -51,6 +54,8 @@ function preload() {
     //load image of the start button
     game.load.spritesheet('button', 'img/button.png', 120, 40);
 
+    //load image of the alien's bullet
+    game.load.image('alienBullet', 'img/bulletAlien.png');
 }
 
 function create() {
@@ -66,11 +71,21 @@ function create() {
     //create 30 sprites and add it to the stage, byt they are inactive
     //and invisible. We'll clean and reset they're off the screen
     bullet.createMultiple(30, 'bullet');
-    //setting for every bullet
+    //setting for every ship bullet
     bullet.setAll('anchor.x', 0.5);
     bullet.setAll('anchor.y', 1);
     bullet.setAll('outOfBoundsKill', true);
     bullet.setAll('checkWorldBounds', true);
+
+    //alien's bullet
+    alienBullet = game.add.group();
+    alienBullet.enableBody = true;
+    alienBullet.physicsBodyType = Phaser.Physics.ARCADE;
+    alienBullet.createMultiple(30, 'alienBullet');
+    alienBullet.setAll('anchor.x', 0.5);
+    alienBullet.setAll('anchor.y', 1);
+    alienBullet.setAll('outOfBoundsKill', true);
+    alienBullet.setAll('checkWorldBounds', true);
 
     //create the ship
     ship = game.add.sprite(game.world.width * 0.5, game.world.height - 40, 'ship');
@@ -114,6 +129,9 @@ function update() {
         }
         else {
             ship.body.velocity.x = 0;
+        }
+        if (game.time.now > bulletAlienTime) {
+            aliensFiring();
         }
     }
 
@@ -168,4 +186,24 @@ function bulletHitAlien(bullet, alien) {
 function startGame() {
     startButton.destroy();
     playing = true;
+}
+
+function aliensFiring() {
+    alienBullets = alienBullet.getFirstExists(false);
+    livingAlines.length = 0;
+
+    alien.forEachAlive(function (alien) {
+        //every living alien in the array
+        livingAlines.push(alien);
+    });
+
+    if (alienBullets && livingAlines.length > 0) {
+        var random = game.rnd.integerInRange(0, livingAlines.length - 1);
+        //choose random alien to shoot
+        var shooter = livingAlines[random];
+        //shoot bullet from alien
+        alienBullets.reset(shooter.body.x, shooter.body.y);
+        game.physics.arcade.moveToObject(alienBullets, ship, 120);
+        bulletAlienTime = game.time.now + 2000;
+    }
 }
